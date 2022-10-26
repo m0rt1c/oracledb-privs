@@ -13,18 +13,19 @@ const DBA_ROLE_PRIVS = "DBA_ROLE_PRIVS"
 const ROLE_SYS_PRIVS = "ROLE_SYS_PRIVS"
 const ROLE_TAB_PRIVS = "ROLE_TAB_PRIVS"
 
+// TODO: Maybe use a function that maps the callbacks instead of a map item
 const CBK = `__cbk__${(Math.random() + 1).toString(36).substring(2)}`
 
 // state
 var ucrt = 1
 var tables = new Map()
-var loaded = false
 
 var uname = document.getElementById('uname')
 var uid = document.getElementById('uid')
 var utot = document.getElementById('utot')
 var scrollbox = document.getElementById('scroll')
 
+// Parse tables as map of user -> [list of privileges]
 function parseDBA_TABLESMapOfArray(text) {
     var tmp = new Map()
     text.split('\n').slice(1).forEach((line) => {
@@ -66,6 +67,7 @@ tables.set(ROLE_TAB_PRIVS, new Map(
     [[CBK, parseDBA_TABLESMapOfArray]]
 ))
 
+// Parse tables as map of user -> data
 function parseDBA_TABLESimple(text) {
     var out = []
     text.split('\n').slice(1).forEach((line) => {
@@ -83,20 +85,9 @@ tables.set(DBA_USERS, new Map(
     [[CBK, parseDBA_TABLESimple]]
 ))
 
-window.addEventListener('hashchange', () => {
-    handleHashChange()
-}, false);
-
+// format table url
 function fmt(s) {
     return `${t_base}${s}${t_ext}`
-}
-
-function handleHashChange() {
-    if (!loaded) {
-        setTimeout(handleHashChange, 5000)
-    } else {
-        update()
-    }
 }
 
 function userNode(u) {
@@ -123,9 +114,7 @@ function relEdge(a, b) {
     return { data: { id: `${a}->${b}`, source: a, target: b } }
 }
 
-function updateNetwork(u) {
-    var e = [userNode(u)]
-
+function addNodesFromDBA_COL_PRIVS(u, e) {
     if (tables.get(DBA_COL_PRIVS).has(u)) {
         tables.get(DBA_COL_PRIVS).get(u).forEach(val => {
             grantee = val[0]
@@ -142,7 +131,21 @@ function updateNetwork(u) {
             e.push(relEdge(table_name, column_name))
         })
     }
+}
 
+function addNodesFromROLE_SYS_PRIVS(u, e) {
+    if (tables.get(ROLE_SYS_PRIVS).has(role)) {
+        tables.get(ROLE_SYS_PRIVS).get(role).forEach(val => {
+            role = val[0]
+            priv = val[1]
+
+            e.push(userPrivNode(priv))
+            e.push(relEdge(role, priv))
+        })
+    }
+}
+
+function addNodesFromDBA_ROLE_PRIVS(u, e) {
     if (tables.get(DBA_ROLE_PRIVS).has(u)) {
         tables.get(DBA_ROLE_PRIVS).get(u).forEach(val => {
             grantee = val[0]
@@ -151,18 +154,16 @@ function updateNetwork(u) {
             e.push(roleNode(role))
             e.push(relEdge(grantee, role))
 
-            if (tables.get(ROLE_SYS_PRIVS).has(role)) {
-                tables.get(ROLE_SYS_PRIVS).get(role).forEach(val => {
-                    role = val[0]
-                    priv = val[1]
 
-                    e.push(userPrivNode(priv))
-                    e.push(relEdge(role, priv))
-                })
-            }
+            addNodesFromROLE_SYS_PRIVS(role, e)
+            addNodesFromDBA_COL_PRIVS(role, e)
+            addNodesFromDBA_SYS_PRIVS(role, e)
+            addNodesFromDBA_TAB_PRIVS(role, e)
         })
     }
+}
 
+function addNodesFromDBA_SYS_PRIVS(u, e) {
     if (tables.get(DBA_SYS_PRIVS).has(u)) {
         tables.get(DBA_SYS_PRIVS).get(u).forEach(val => {
             grantee = val[0]
@@ -172,7 +173,9 @@ function updateNetwork(u) {
             e.push(relEdge(grantee, priv))
         })
     }
+}
 
+function addNodesFromDBA_TAB_PRIVS(u, e) {
     if (tables.get(DBA_TAB_PRIVS).has(u)) {
         tables.get(DBA_TAB_PRIVS).get(u).forEach(val => {
             grantee = val[0]
@@ -186,7 +189,9 @@ function updateNetwork(u) {
             e.push(relEdge(priv, table_name))
         })
     }
+}
 
+function addNodesFromROLE_TAB_PRIVS(u, e) {
     if (tables.get(ROLE_TAB_PRIVS).has(u)) {
         tables.get(ROLE_TAB_PRIVS).get(u).forEach(val => {
             grantee = val[0]
@@ -203,6 +208,16 @@ function updateNetwork(u) {
             e.push(relEdge(table_name, column_name))
         })
     }
+}
+
+function updateNetwork(u) {
+    var e = [userNode(u)]
+
+    addNodesFromDBA_COL_PRIVS(u, e)
+    addNodesFromDBA_ROLE_PRIVS(u, e)
+    addNodesFromDBA_SYS_PRIVS(u, e)
+    addNodesFromDBA_TAB_PRIVS(u, e)
+    addNodesFromROLE_TAB_PRIVS(u, e)
 
     cytoscape({
         container: document.getElementById('cy'),
@@ -279,10 +294,9 @@ async function init() {
 
     await Promise.all(promises)
 
-    loaded = true
     utot.innerText = tables.get(DBA_USERS).size - 2
-
     tables.set(DBA_USERS, new Map([...tables.get(DBA_USERS).entries()].sort()))
+    
     update()
 }
 

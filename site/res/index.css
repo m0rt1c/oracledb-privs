@@ -6,7 +6,7 @@
 }
 
 #cy {
-    width: 100%;
+    width: 80vw;
 }
 
 #forms {
@@ -17,6 +17,7 @@
     border: 5px solid black;
     padding: 5px;
     overflow: hidden;
+    width: 20vw;
 }
 
 #network-holder {
