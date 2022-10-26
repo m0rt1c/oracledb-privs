@@ -1,13 +1,18 @@
 const t_base = '/tables/'
 const t_ext = '.csv'
 
-const DBA_COL_PRIVS = "DBA_COL_PRIVS"
-const DBA_ROLE_PRIVS = "DBA_ROLE_PRIVS"
+
 const DBA_ROLES = "DBA_ROLES"
+const DBA_USERS = "DBA_USERS"
+
+const DBA_COL_PRIVS = "DBA_COL_PRIVS"
 const DBA_SYS_PRIVS = "DBA_SYS_PRIVS"
 const DBA_TAB_PRIVS = "DBA_TAB_PRIVS"
-const DBA_USERS = "DBA_USERS"
+const DBA_ROLE_PRIVS = "DBA_ROLE_PRIVS"
+
+const ROLE_SYS_PRIVS = "ROLE_SYS_PRIVS"
 const ROLE_TAB_PRIVS = "ROLE_TAB_PRIVS"
+
 const CBK = `__cbk__${(Math.random() + 1).toString(36).substring(2)}`
 
 // state
@@ -19,12 +24,6 @@ var uname = document.getElementById('uname')
 var uid = document.getElementById('uid')
 var utot = document.getElementById('utot')
 var scrollbox = document.getElementById('scroll')
-
-tables.set(DBA_COL_PRIVS, new Map())
-tables.set(DBA_ROLE_PRIVS, new Map())
-tables.set(DBA_SYS_PRIVS, new Map())
-tables.set(ROLE_TAB_PRIVS, new Map()
-)
 
 function parseDBA_TABLESMapOfArray(text) {
     var tmp = new Map()
@@ -43,7 +42,27 @@ function parseDBA_TABLESMapOfArray(text) {
     return out
 }
 
+tables.set(DBA_COL_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
+tables.set(DBA_ROLE_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
+tables.set(DBA_SYS_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
 tables.set(DBA_TAB_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
+tables.set(ROLE_SYS_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
+tables.set(ROLE_TAB_PRIVS, new Map(
     [[CBK, parseDBA_TABLESMapOfArray]]
 ))
 
@@ -59,6 +78,7 @@ function parseDBA_TABLESimple(text) {
 tables.set(DBA_ROLES, new Map(
     [[CBK, parseDBA_TABLESimple]]
 ))
+
 tables.set(DBA_USERS, new Map(
     [[CBK, parseDBA_TABLESimple]]
 ))
@@ -91,6 +111,14 @@ function tableNode(u) {
     return { data: { id: u, label: `T:${u}`, color: '#ffa500' } }
 }
 
+function columnNode(u) {
+    return { data: { id: u, label: `C:${u}`, color: '#ffff00' } }
+}
+
+function roleNode(u) {
+    return { data: { id: u, label: `R:${u}`, color: '#800080' } }
+}
+
 function relEdge(a, b) {
     return { data: { id: `${a}->${b}`, source: a, target: b } }
 }
@@ -98,8 +126,55 @@ function relEdge(a, b) {
 function updateNetwork(u) {
     var e = [userNode(u)]
 
+    if (tables.get(DBA_COL_PRIVS).has(u)) {
+        tables.get(DBA_COL_PRIVS).get(u).forEach(val => {
+            grantee = val[0]
+            table_name = val[2]
+            column_name = val[3]
+            priv = val[5]
+
+            e.push(tableNode(table_name))
+            e.push(columnNode(column_name))
+            e.push(userPrivNode(priv))
+
+            e.push(relEdge(grantee, priv))
+            e.push(relEdge(priv, table_name))
+            e.push(relEdge(table_name, column_name))
+        })
+    }
+
+    if (tables.get(DBA_ROLE_PRIVS).has(u)) {
+        tables.get(DBA_ROLE_PRIVS).get(u).forEach(val => {
+            grantee = val[0]
+            role = val[1]
+
+            e.push(roleNode(role))
+            e.push(relEdge(grantee, role))
+
+            if (tables.get(ROLE_SYS_PRIVS).has(role)) {
+                tables.get(ROLE_SYS_PRIVS).get(role).forEach(val => {
+                    role = val[0]
+                    priv = val[1]
+
+                    e.push(userPrivNode(priv))
+                    e.push(relEdge(role, priv))
+                })
+            }
+        })
+    }
+
+    if (tables.get(DBA_SYS_PRIVS).has(u)) {
+        tables.get(DBA_SYS_PRIVS).get(u).forEach(val => {
+            grantee = val[0]
+            priv = val[1]
+
+            e.push(userPrivNode(priv))
+            e.push(relEdge(grantee, priv))
+        })
+    }
+
     if (tables.get(DBA_TAB_PRIVS).has(u)) {
-        let val = tables.get(DBA_TAB_PRIVS).get(u).forEach(val=>{
+        tables.get(DBA_TAB_PRIVS).get(u).forEach(val => {
             grantee = val[0]
             table_name = val[2]
             priv = val[4]
@@ -109,6 +184,23 @@ function updateNetwork(u) {
 
             e.push(relEdge(grantee, priv))
             e.push(relEdge(priv, table_name))
+        })
+    }
+
+    if (tables.get(ROLE_TAB_PRIVS).has(u)) {
+        tables.get(ROLE_TAB_PRIVS).get(u).forEach(val => {
+            grantee = val[0]
+            table_name = val[2]
+            column_name = val[3]
+            priv = val[4]
+
+            e.push(tableNode(table_name))
+            e.push(columnNode(column_name))
+            e.push(userPrivNode(priv))
+
+            e.push(relEdge(grantee, priv))
+            e.push(relEdge(priv, table_name))
+            e.push(relEdge(table_name, column_name))
         })
     }
 
@@ -135,7 +227,7 @@ function updateNetwork(u) {
             },
         ],
         layout: {
-            name: 'circle'
+            name: 'breadthfirst'
         }
     });
 }
@@ -153,6 +245,7 @@ function update() {
     tables.get(DBA_USERS).forEach((val) => {
         if (typeof val != "object") { return }
         if (val[0] == "") { return }
+        // if (val[3] != "OPEN") { return }
 
         let e = document.createElement('button')
         e.innerText = val[0]
@@ -185,8 +278,11 @@ async function init() {
     })
 
     await Promise.all(promises)
+
     loaded = true
     utot.innerText = tables.get(DBA_USERS).size - 2
+
+    tables.set(DBA_USERS, new Map([...tables.get(DBA_USERS).entries()].sort()))
     update()
 }
 
