@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Oracle DB User Privileges Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./res/index.css">
+</head>
+
+<body class="no-margin-and-border">
+    <div id="content" class="no-margin-and-border">
+        <div id="menu" class="flex-col">
+            <div class="flex-row">
+                <span width="20%">User privilages map</span>
+                <button>
+                    <b>&lt;</b>
+                </button>
+            </div>
+            <div class="flex-col">
+                <h1 id="uname" class="aligned">USERNAME</h1>
+                <div class="flex-row" style="justify-content: flex-start;">
+                    <span>ID:&nbsp;&nbsp;</span><span id="uid">ID</span>
+                </div>
+                <div class="flex-row">
+                    <button>&lt;</button>
+                    User <span id="uctr">1</span> of <span id="utot">1</span>
+                    <button>&gt;</button>
+                </div>
+                <div id="forms" class="flex-col">
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <span>Go to number</span>
+                            <span>Filter by username</span>
+                            <span>Filter by user id</span>
+                        </div>
+                        <div class="flex-col">
+                            <input type="text" name="unamefilter">
+                            <input type="number" name="idfilter">
+                            <input type="number" name="numfilter">
+                        </div>
+                        <div class="flex-col">
+                            <button>&gt;</button>
+                            <button>&gt;</button>
+                            <button>&gt;</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="usernames-scrollbox" class="flex-col"></div>
+            </div>
+        </div>
+        <div id="network-holder"></div>
+    </div>
+    <script src="./res/index.js"></script>
+    <script src="./res/cytoscape.min.js"></script>
+</body>
+
+</html>

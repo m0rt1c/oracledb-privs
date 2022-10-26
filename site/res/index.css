@@ -1,0 +1,45 @@
+#content {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100vh;
+}
+
+#usernames-scrollbox {
+    flex-wrap: wrap;
+}
+
+#network-holder {
+    display: flex;
+}
+
+#menu {
+    border: 5px solid black;
+    padding: 5px;
+}
+
+#forms {
+    align-self: flex-end;
+}
+
+.no-margin-and-border {
+    margin: 0px;
+    border: 0px;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.aligned {
+    display: flex;
+    justify-content: space-around;
+}
