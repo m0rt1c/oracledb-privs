@@ -23,11 +23,31 @@ var scrollbox = document.getElementById('scroll')
 tables.set(DBA_COL_PRIVS, new Map())
 tables.set(DBA_ROLE_PRIVS, new Map())
 tables.set(DBA_SYS_PRIVS, new Map())
-tables.set(DBA_TAB_PRIVS, new Map())
-tables.set(ROLE_TAB_PRIVS, new Map())
-tables.set(DBA_ROLES, new Map())
+tables.set(ROLE_TAB_PRIVS, new Map()
+)
 
-function parseDBA_USERS(text) {
+function parseDBA_TABLESMapOfArray(text) {
+    var tmp = new Map()
+    text.split('\n').slice(1).forEach((line) => {
+        args = line.split(',')
+        grantee = args[0]
+        if (!tmp.has(grantee)) {
+            tmp.set(grantee, [])
+        }
+        tmp.get(grantee).push(args)
+    })
+    var out = []
+    tmp.forEach((val, key) => {
+        out.push([key, val])
+    })
+    return out
+}
+
+tables.set(DBA_TAB_PRIVS, new Map(
+    [[CBK, parseDBA_TABLESMapOfArray]]
+))
+
+function parseDBA_TABLESimple(text) {
     var out = []
     text.split('\n').slice(1).forEach((line) => {
         args = line.split(',')
@@ -36,8 +56,11 @@ function parseDBA_USERS(text) {
     return out
 }
 
+tables.set(DBA_ROLES, new Map(
+    [[CBK, parseDBA_TABLESimple]]
+))
 tables.set(DBA_USERS, new Map(
-    [[CBK, parseDBA_USERS]]
+    [[CBK, parseDBA_TABLESimple]]
 ))
 
 window.addEventListener('hashchange', () => {
@@ -52,17 +75,80 @@ function handleHashChange() {
     if (!loaded) {
         setTimeout(handleHashChange, 5000)
     } else {
-        updateGraph()
+        update()
     }
+}
+
+function userNode(u) {
+    return { data: { id: u, label: `U:${u}`, color: '#008000' } }
+}
+
+function userPrivNode(u) {
+    return { data: { id: u, label: `P:${u}`, color: '#ff0000' } }
+}
+
+function tableNode(u) {
+    return { data: { id: u, label: `T:${u}`, color: '#ffa500' } }
+}
+
+function relEdge(a, b) {
+    return { data: { id: `${a}->${b}`, source: a, target: b } }
+}
+
+function updateNetwork(u) {
+    var e = [userNode(u)]
+
+    if (tables.get(DBA_TAB_PRIVS).has(u)) {
+        let val = tables.get(DBA_TAB_PRIVS).get(u).forEach(val=>{
+            grantee = val[0]
+            table_name = val[2]
+            priv = val[4]
+
+            e.push(tableNode(table_name))
+            e.push(userPrivNode(priv))
+
+            e.push(relEdge(grantee, priv))
+            e.push(relEdge(priv, table_name))
+        })
+    }
+
+    cytoscape({
+        container: document.getElementById('cy'),
+        elements: e,
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'background-color': 'data(color)',
+                    'label': 'data(label)'
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 3,
+                    'line-color': '#ccc',
+                    'target-arrow-color': '#ccc',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            },
+        ],
+        layout: {
+            name: 'circle'
+        }
+    });
 }
 
 function setUser(x) {
     var user = tables.get(DBA_USERS).get(x)
     uname.innerText = user[0]
     uid.innerText = user[1]
+
+    updateNetwork(user[0])
 }
 
-function updateGraph() {
+function update() {
     var first = true
     tables.get(DBA_USERS).forEach((val) => {
         if (typeof val != "object") { return }
@@ -70,7 +156,7 @@ function updateGraph() {
 
         let e = document.createElement('button')
         e.innerText = val[0]
-        e.onclick = function(){
+        e.onclick = function () {
             setUser(val[0])
         }
         scrollbox.appendChild(e)
@@ -101,7 +187,7 @@ async function init() {
     await Promise.all(promises)
     loaded = true
     utot.innerText = tables.get(DBA_USERS).size - 2
-    updateGraph()
+    update()
 }
 
 init()

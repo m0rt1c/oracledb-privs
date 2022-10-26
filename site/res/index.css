@@ -5,6 +5,10 @@
     height: 100vh;
 }
 
+#cy {
+    width: 100%;
+}
+
 #forms {
     align-self: flex-end;
 }
@@ -12,6 +16,7 @@
 #menu {
     border: 5px solid black;
     padding: 5px;
+    overflow: hidden;
 }
 
 #network-holder {
@@ -23,7 +28,8 @@
 }
 
 #scroll {
-    height: 500px;
+    max-height: 500px;
+    margin-top: 5px;
     overflow-y: scroll;
 }
 
