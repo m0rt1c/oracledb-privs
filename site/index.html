@@ -13,33 +13,20 @@
         <div id="menu" class="flex-col">
             <div class="flex-row">
                 <span width="20%">User privileges map</span>
-                <button>
-                    <b>&lt;</b>
-                </button>
             </div>
             <div class="flex-col">
                 <h1 id="uname" class="aligned">USERNAME</h1>
-                <div class="flex-row" style="justify-content: flex-start;">
-                    <span>ID:&nbsp;&nbsp;</span><span id="uid">ID</span>
-                </div>
-                <div id="forms" class="flex-col">
-                    <div class="flex-row">
-                        <div class="flex-col">
-                            <span>Filter by username</span>
-                            <span>Filter by user id</span>
-                        </div>
-                        <div class="flex-col">
-                            <input type="number" name="idfilter">
-                            <input type="number" name="numfilter">
-                        </div>
-                        <div class="flex-col">
-                            <button>&gt;</button>
-                            <button>&gt;</button>
-                        </div>
+                <div class="flex-row">
+                    <div>
+                        <span>ID:&nbsp;&nbsp;</span><span id="uid">ID</span>
                     </div>
                 </div>
                 <div class="flex-row">
-                    Toatal User Count: <span id="utot">1</span>
+                    <span>Filter by username</span>
+                    <input type="text" id="unamefilter" onchange="filterUsernames()">
+                </div>
+                <div class="flex-row">
+                    User Count: <span id="utot">1</span>
                 </div>
                 <div id="scroll" class="flex-col">
                 </div>

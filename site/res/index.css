@@ -50,8 +50,16 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.hidden {
+    display: none;
+}
      
 .no-margin-and-border {
     margin: 0px;
     border: 0px;
+}
+
+.visible {
+    display: block;
 }

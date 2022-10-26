@@ -24,6 +24,26 @@ var uname = document.getElementById('uname')
 var uid = document.getElementById('uid')
 var utot = document.getElementById('utot')
 var scrollbox = document.getElementById('scroll')
+var ufilter = document.getElementById('unamefilter')
+var scrollbox = document.getElementById('scroll')
+var ufilter = document.getElementById('unamefilter')
+
+async function filterUsernames() {
+    var re = RegExp(".*")
+    if (ufilter.value != "" ) {
+        re = RegExp(ufilter.value)
+    }
+    for (var i = 0; i < scrollbox.children.length; i++) {
+        n = scrollbox.children[i]
+        if ( re.exec(n.innerText) ) {
+            n.classList.add("visible")
+            n.classList.remove("hidden")
+        } else {
+            n.classList.add("hidden")
+            n.classList.remove("visible")
+        }
+    }
+}
 
 // Parse tables as map of user -> [list of privileges]
 function parseDBA_TABLESMapOfArray(text) {
@@ -242,7 +262,9 @@ function updateNetwork(u) {
             },
         ],
         layout: {
-            name: 'breadthfirst'
+            name: 'breadthfirst',
+            fit: false,
+            directed: true
         }
     });
 }
@@ -296,7 +318,7 @@ async function init() {
 
     utot.innerText = tables.get(DBA_USERS).size - 2
     tables.set(DBA_USERS, new Map([...tables.get(DBA_USERS).entries()].sort()))
-    
+
     update()
 }
 
