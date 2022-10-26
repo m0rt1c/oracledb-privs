@@ -111,23 +111,23 @@ function fmt(s) {
 }
 
 function userNode(u) {
-    return { data: { id: u, label: `U:${u}`, color: '#008000' } }
+    return { data: { id: u, label: `U:${u}`, color: '#008000', shape: 'diamond' } }
 }
 
 function userPrivNode(u) {
-    return { data: { id: u, label: `P:${u}`, color: '#ff0000' } }
+    return { data: { id: u, label: `P:${u}`, color: '#ff0000', shape: 'star' } }
 }
 
 function tableNode(u) {
-    return { data: { id: u, label: `T:${u}`, color: '#ffa500' } }
+    return { data: { id: u, label: `T:${u}`, color: '#ffa500', shape: 'rectangle' } }
 }
 
 function columnNode(u) {
-    return { data: { id: u, label: `C:${u}`, color: '#ffff00' } }
+    return { data: { id: u, label: `C:${u}`, color: '#ffff00', shape: 'round-rectangle' } }
 }
 
 function roleNode(u) {
-    return { data: { id: u, label: `R:${u}`, color: '#800080' } }
+    return { data: { id: u, label: `R:${u}`, color: '#800080', shape: 'triangle' } }
 }
 
 function relEdge(a, b) {
@@ -247,7 +247,8 @@ function updateNetwork(u) {
                 selector: 'node',
                 style: {
                     'background-color': 'data(color)',
-                    'label': 'data(label)'
+                    'label': 'data(label)',
+                    'shape': 'data(shape)'
                 }
             },
             {
