@@ -31,7 +31,7 @@ var ufilter = document.getElementById('unamefilter')
 async function filterUsernames() {
     var re = RegExp(".*")
     if (ufilter.value != "" ) {
-        re = RegExp(ufilter.value)
+        re = RegExp(ufilter.value, 'i')
     }
     for (var i = 0; i < scrollbox.children.length; i++) {
         n = scrollbox.children[i]
@@ -265,6 +265,8 @@ function updateNetwork(u) {
         layout: {
             name: 'breadthfirst',
             fit: false,
+            avoidOverlap: true,
+            nodeDimensionsIncludeLabels: true,
             directed: true
         }
     });
