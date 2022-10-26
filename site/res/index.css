@@ -14,7 +14,7 @@
 }
 
 #menu {
-    border: 5px solid black;
+    border-right: 5px solid black;
     padding: 5px;
     overflow: hidden;
     width: 20vw;
