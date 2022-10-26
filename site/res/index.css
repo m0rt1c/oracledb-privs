@@ -5,12 +5,8 @@
     height: 100vh;
 }
 
-#usernames-scrollbox {
-    flex-wrap: wrap;
-}
-
-#network-holder {
-    display: flex;
+#forms {
+    align-self: flex-end;
 }
 
 #menu {
@@ -18,18 +14,27 @@
     padding: 5px;
 }
 
-#forms {
-    align-self: flex-end;
+#network-holder {
+    display: flex;
 }
 
-.no-margin-and-border {
-    margin: 0px;
-    border: 0px;
+#usernames-scrollbox {
+    flex-wrap: wrap;
+}
+
+#scroll {
+    height: 500px;
+    overflow-y: scroll;
+}
+
+.aligned {
+    display: flex;
+    justify-content: space-around;
 }
 
 .flex-col {
     display: flex;
-    flex-direction: column;
+    flex-direction: column;  
 }
 
 .flex-row {
@@ -38,8 +43,8 @@
     justify-content: space-between;
     align-items: center;
 }
-
-.aligned {
-    display: flex;
-    justify-content: space-around;
+     
+.no-margin-and-border {
+    margin: 0px;
+    border: 0px;
 }

@@ -22,31 +22,27 @@
                 <div class="flex-row" style="justify-content: flex-start;">
                     <span>ID:&nbsp;&nbsp;</span><span id="uid">ID</span>
                 </div>
-                <div class="flex-row">
-                    <button>&lt;</button>
-                    User <span id="uctr">1</span> of <span id="utot">1</span>
-                    <button>&gt;</button>
-                </div>
                 <div id="forms" class="flex-col">
                     <div class="flex-row">
                         <div class="flex-col">
-                            <span>Go to number</span>
                             <span>Filter by username</span>
                             <span>Filter by user id</span>
                         </div>
                         <div class="flex-col">
-                            <input type="text" name="unamefilter">
                             <input type="number" name="idfilter">
                             <input type="number" name="numfilter">
                         </div>
                         <div class="flex-col">
                             <button>&gt;</button>
                             <button>&gt;</button>
-                            <button>&gt;</button>
                         </div>
                     </div>
                 </div>
-                <div id="usernames-scrollbox" class="flex-col"></div>
+                <div class="flex-row">
+                    Toatal User Count: <span id="utot">1</span>
+                </div>
+                <div id="scroll" class="flex-col">
+                </div>
             </div>
         </div>
         <div id="network-holder"></div>
