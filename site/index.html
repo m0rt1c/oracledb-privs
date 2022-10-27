@@ -56,6 +56,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex-row">
+                    <label for="layouts">Set graph layout:</label>
+                    <select name="layouts" id="layouts" onchange="updateLayout(this.value)">
+                        <option value="random">random</option>
+                        <option value="preset">preset</option>
+                        <option value="grid">grid</option>
+                        <option value="circle">circle</option>
+                        <option value="concentric">concentric</option>
+                        <option value="breadthfirst" selected>breadthfirst</option>
+                        <option value="cose">cose</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div id="cy"></div>

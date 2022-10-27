@@ -54,7 +54,18 @@ async function toggleEntity(e) {
             n.show()
         }
     })
-    cy.layout.run()
+}
+
+async function updateLayout(v) {
+    var layout = cy.elements().not(':hidden').layout({
+        name: v,
+        fit: false,
+        avoidOverlap: true,
+        nodeDimensionsIncludeLabels: true,
+        directed: true
+    })
+    layout.run()
+    cy.center()
 }
 
 // Parse tables as map of user -> [list of privileges]
