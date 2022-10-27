@@ -15,5 +15,5 @@ fi
 while read table
 do
     echo Downloading "$table"
-    usql -q oracle://$USR:$PWD@$HST:$PORT/$SID --csv -c "SELECT * FROM $table;" > ./site/tables/$table.csv
+    usql -q oracle://$USR:$PWD@$HST:$PRT/$SID --csv -c "SELECT * FROM $table;" > ./site/tables/$table.csv
 done < tables.txt

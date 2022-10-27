@@ -27,6 +27,7 @@ var scrollbox = document.getElementById('scroll')
 var ufilter = document.getElementById('unamefilter')
 var scrollbox = document.getElementById('scroll')
 var ufilter = document.getElementById('unamefilter')
+var cy = null
 
 async function filterUsernames() {
     var re = RegExp(".*")
@@ -43,6 +44,17 @@ async function filterUsernames() {
             n.classList.remove("visible")
         }
     }
+}
+
+async function toggleEntity(e) {
+    cy.filter(`node[type = "${e}"]`).nodes().forEach(n=>{
+        if (n.visible()) {
+            n.hide()
+        } else {
+            n.show()
+        }
+    })
+    cy.layout.run()
 }
 
 // Parse tables as map of user -> [list of privileges]
@@ -111,23 +123,23 @@ function fmt(s) {
 }
 
 function userNode(u) {
-    return { data: { id: u, label: `U:${u}`, color: '#008000', shape: 'diamond' } }
+    return { data: { id: u, label: `U:${u}`, color: '#008000', shape: 'diamond', type: 'u' } }
 }
 
 function userPrivNode(u) {
-    return { data: { id: u, label: `P:${u}`, color: '#ff0000', shape: 'star' } }
+    return { data: { id: u, label: `P:${u}`, color: '#ff0000', shape: 'star', type: 'p' } }
 }
 
 function tableNode(u) {
-    return { data: { id: u, label: `T:${u}`, color: '#ffa500', shape: 'rectangle' } }
+    return { data: { id: u, label: `T:${u}`, color: '#ffa500', shape: 'rectangle', type: 't' } }
 }
 
 function columnNode(u) {
-    return { data: { id: u, label: `C:${u}`, color: '#ffff00', shape: 'round-rectangle' } }
+    return { data: { id: u, label: `C:${u}`, color: '#ffff00', shape: 'round-rectangle', type: 'c' } }
 }
 
 function roleNode(u) {
-    return { data: { id: u, label: `R:${u}`, color: '#800080', shape: 'triangle' } }
+    return { data: { id: u, label: `R:${u}`, color: '#800080', shape: 'triangle', type: 'r' } }
 }
 
 function relEdge(a, b) {
@@ -231,6 +243,8 @@ function addNodesFromROLE_TAB_PRIVS(u, e) {
 }
 
 function updateNetwork(u) {
+    document.querySelectorAll('input[type=checkbox]').forEach(c=>{c.checked = false})
+
     var e = [userNode(u)]
 
     addNodesFromDBA_COL_PRIVS(u, e)
@@ -239,7 +253,7 @@ function updateNetwork(u) {
     addNodesFromDBA_TAB_PRIVS(u, e)
     addNodesFromROLE_TAB_PRIVS(u, e)
 
-    cytoscape({
+    cy = cytoscape({
         container: document.getElementById('cy'),
         elements: e,
         style: [

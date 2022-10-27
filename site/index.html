@@ -12,7 +12,10 @@
     <div id="content" class="no-margin-and-border">
         <div id="menu" class="flex-col">
             <div class="flex-col">
-                <h1 id="uname" class="aligned">USERNAME</h1>
+                <div class="flex-row">
+                    <span style="flex-grow: 1;">User:</span>
+                    <h1 style="flex-grow: 15;" id="uname" class="aligned">USERNAME</h1>
+                </div>
                 <div class="flex-row">
                     <div>
                         <span>ID:&nbsp;&nbsp;</span><span id="uid">ID</span>
@@ -26,6 +29,32 @@
                     User Count: <span id="utot">1</span>
                 </div>
                 <div id="scroll" class="flex-col">
+                </div>
+                <div style="margin-top: 5px;background-color: lightgray;" class="flex-col">
+                    <span class="flex-row"> <b>Legend</b> <span>Hide</span></span>
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <span>Users:</span>
+                            <span>Roles:</span>
+                            <span>Privileges:</span>
+                            <span>Tables:</span>
+                            <span>Columns:</span>
+                        </div>
+                        <div class="flex-col">
+                            <b style="color:green;">green diamonds</b>
+                            <b style="color:purple;">purple triangles</b>
+                            <b style="color:red;">red stars</b>
+                            <b style="color:orange;">orange rectangles</b>
+                            <b style="color:yellow;">yellow rectangles</b>
+                        </div>
+                        <div class="flex-col">
+                            <span><input type="checkbox" onchange="toggleEntity('u')"></span>
+                            <span><input type="checkbox" onchange="toggleEntity('r')"></span>
+                            <span><input type="checkbox" onchange="toggleEntity('p')"></span>
+                            <span><input type="checkbox" onchange="toggleEntity('t')"></span>
+                            <span><input type="checkbox" onchange="toggleEntity('c')"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
