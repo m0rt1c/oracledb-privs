@@ -23,7 +23,7 @@ A utility script, named `pulltables.sh` is included in this repo. It will load c
 
 2. Start the web server
 
-Server the files inside the `./site` directory to access the web page, simply opening the web page in the browser will not do unless you modify the code.
+Serve the files in `./site` directory to access the web page, simply opening `./site/index.html` in the browser will not work unless you modify the code.
 
 A sample web server written in go can be started with:
 
