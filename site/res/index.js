@@ -347,6 +347,9 @@ async function init() {
     utot.innerText = tables.get(DBA_USERS).size - 2
     tables.set(DBA_USERS, new Map([...tables.get(DBA_USERS).entries()].sort()))
 
+    document.getElementById('loader').classList.add('hidden')
+    document.getElementById('content').classList.remove('hidden')
+
     update()
 }
 

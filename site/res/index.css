@@ -53,7 +53,7 @@
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
      
 .no-margin-and-border {
