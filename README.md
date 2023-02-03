@@ -44,3 +44,7 @@ As an alternative you can start a simple python server:
 ```bash
 python -m http.server 9090 --directory ./site
 ```
+
+## TODO
+
+1. Improve UI
