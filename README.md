@@ -19,7 +19,15 @@ ROLE_SYS_PRIVS
 ROLE_TAB_PRIVS
 ```
 
-A utility script, named `pulltables.sh` is included in this repo. It will load credentials and targets from a file named `.env` and use [usql](https://github.com/xo/usql) to download the database tables.
+A utility script, named `pulltables.sh` is included in this repo. It will load credentials and targets from a file named `.env` and use [usql](https://github.com/xo/usql) to download the database tables. The `.env` file must export this variables:
+
+```
+USR=username
+PAS=password
+HST=hostaname or ip address
+PRT=port
+SID=database sid
+```
 
 2. Start the web server
 
