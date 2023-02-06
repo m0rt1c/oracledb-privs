@@ -96,14 +96,6 @@ function parseDBA_TABLESimple(text) {
     return out
 }
 
-tables.set(DBA_ROLES, new Map(
-    [[CBK, parseDBA_TABLESimple]]
-))
-
-tables.set(DBA_USERS, new Map(
-    [[CBK, parseDBA_TABLESimple]]
-))
-
 // format table url
 function fmt(s) {
     return `${t_base}${s}${t_ext}`
@@ -338,6 +330,14 @@ async function init() {
 
     tables.set(ROLE_TAB_PRIVS, new Map(
         [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    tables.set(DBA_ROLES, new Map(
+        [[CBK, parseDBA_TABLESimple]]
+    ))
+    
+    tables.set(DBA_USERS, new Map(
+        [[CBK, parseDBA_TABLESimple]]
     ))
 
     var promises = []
