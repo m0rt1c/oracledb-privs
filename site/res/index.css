@@ -45,6 +45,15 @@
     background-color: purple;
     float: right;
     border-radius: 3px;
+    margin-left: 5px;
+}
+
+.perm-tag {
+    color: white;
+    background-color: red;
+    float: right;
+    border-radius: 3px;
+    margin-left: 5px;
 }
 
 .flex-col {

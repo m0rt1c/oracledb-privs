@@ -285,10 +285,34 @@ function update() {
 
         if (tables.get(DBA_ROLE_PRIVS).has(val[0])) {
             for (i in tables.get(DBA_ROLE_PRIVS).get(val[0])) { 
-                if ("DBA" == tables.get(DBA_ROLE_PRIVS).get(val[0])[i][1]) {
+                if ("DBA" === tables.get(DBA_ROLE_PRIVS).get(val[0])[i][1]) {
                     tag = document.createElement("b")
                     tag.classList.add("role-tag")
                     tag.innerText = "DBA"
+                    e.appendChild(tag)
+                    break
+                }
+            }
+        }
+        
+        if (tables.get(DBA_ROLE_PRIVS).has(val[0])) {
+            for (i in tables.get(DBA_ROLE_PRIVS).get(val[0])) { 
+                if ("SCHEDULER_ADMIN" === tables.get(DBA_ROLE_PRIVS).get(val[0])[i][1]) {
+                    tag = document.createElement("b")
+                    tag.classList.add("role-tag")
+                    tag.innerText = "SCHEDULER_ADMIN"
+                    e.appendChild(tag)
+                    break
+                }
+            }
+        }
+        
+        if (tables.get(DBA_ROLE_PRIVS).has(val[0])) {
+            for (i in tables.get(DBA_SYS_PRIVS).get(val[0])) { 
+                if ("CREATE ANY DIRECTORY" === tables.get(DBA_SYS_PRIVS).get(val[0])[i][1]) {
+                    tag = document.createElement("b")
+                    tag.classList.add("perm-tag")
+                    tag.innerText = "CREATE ANY DIRECTORY"
                     e.appendChild(tag)
                     break
                 }
