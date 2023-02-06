@@ -40,6 +40,11 @@
     justify-content: space-around;
 }
 
+.role-tag {
+    color:white;
+    background-color:purple;
+}
+
 .flex-col {
     display: flex;
     flex-direction: column;  

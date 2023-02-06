@@ -31,12 +31,12 @@ var cy = null
 
 async function filterUsernames() {
     var re = RegExp(".*")
-    if (ufilter.value != "" ) {
+    if (ufilter.value != "") {
         re = RegExp(ufilter.value, 'i')
     }
     for (var i = 0; i < scrollbox.children.length; i++) {
         n = scrollbox.children[i]
-        if ( re.exec(n.innerText) ) {
+        if (re.exec(n.innerText)) {
             n.classList.add("visible")
             n.classList.remove("hidden")
         } else {
@@ -47,7 +47,7 @@ async function filterUsernames() {
 }
 
 async function toggleEntity(e) {
-    cy.filter(`node[type = "${e}"]`).nodes().forEach(n=>{
+    cy.filter(`node[type = "${e}"]`).nodes().forEach(n => {
         if (n.visible()) {
             n.hide()
         } else {
@@ -85,30 +85,6 @@ function parseDBA_TABLESMapOfArray(text) {
     })
     return out
 }
-
-tables.set(DBA_COL_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
-
-tables.set(DBA_ROLE_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
-
-tables.set(DBA_SYS_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
-
-tables.set(DBA_TAB_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
-
-tables.set(ROLE_SYS_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
-
-tables.set(ROLE_TAB_PRIVS, new Map(
-    [[CBK, parseDBA_TABLESMapOfArray]]
-))
 
 // Parse tables as map of user -> data
 function parseDBA_TABLESimple(text) {
@@ -254,7 +230,7 @@ function addNodesFromROLE_TAB_PRIVS(u, e) {
 }
 
 function updateNetwork(u) {
-    document.querySelectorAll('input[type=checkbox]').forEach(c=>{c.checked = false})
+    document.querySelectorAll('input[type=checkbox]').forEach(c => { c.checked = false })
 
     var e = [userNode(u)]
 
@@ -314,6 +290,20 @@ function update() {
 
         let e = document.createElement('button')
         e.innerText = val[0]
+
+        if (tables.get(DBA_ROLE_PRIVS).has(val[0])) {
+            for (i in tables.get(DBA_ROLE_PRIVS).get(val[0])) { 
+                if ("DBA" == tables.get(DBA_ROLE_PRIVS).get(val[0])[i][1]) {
+                    e.innerText += " - "
+                    tag = document.createElement("b")
+                    tag.classList.add("role-tag")
+                    tag.innerText = "DBA"
+                    e.appendChild(tag)
+                    break
+                }
+            }
+        }
+
         e.onclick = function () {
             setUser(val[0])
         }
@@ -327,8 +317,33 @@ function update() {
 }
 
 async function init() {
-    var promises = []
+    tables.set(DBA_COL_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
 
+    tables.set(DBA_ROLE_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    tables.set(DBA_SYS_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    tables.set(DBA_TAB_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    tables.set(ROLE_SYS_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    tables.set(ROLE_TAB_PRIVS, new Map(
+        [[CBK, parseDBA_TABLESMapOfArray]]
+    ))
+
+    var promises = []
+    // fetch all tables CSV from the server and 
+    // initializes the maps with the callaback function
     tables.forEach((t_data, t_name) => {
         if (!t_data.has(CBK)) { return }
 
