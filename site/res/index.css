@@ -41,8 +41,10 @@
 }
 
 .role-tag {
-    color:white;
-    background-color:purple;
+    color: white;
+    background-color: purple;
+    float: right;
+    border-radius: 3px;
 }
 
 .flex-col {

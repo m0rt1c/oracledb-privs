@@ -294,7 +294,6 @@ function update() {
         if (tables.get(DBA_ROLE_PRIVS).has(val[0])) {
             for (i in tables.get(DBA_ROLE_PRIVS).get(val[0])) { 
                 if ("DBA" == tables.get(DBA_ROLE_PRIVS).get(val[0])[i][1]) {
-                    e.innerText += " - "
                     tag = document.createElement("b")
                     tag.classList.add("role-tag")
                     tag.innerText = "DBA"
