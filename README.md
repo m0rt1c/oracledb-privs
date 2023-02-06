@@ -6,7 +6,7 @@ A tool to visualize the permissions granted to Oracle database users, helping sy
 
 1. Obtain the database tables 
 
-Obtain the tables below, inside file `tables.txt` too, from the database and save them in `./site/tables/` as CSV files with the following naming convention `TABLE_NAME.csv`.
+Obtain the tables below, the list is in file `tables.txt` too, from the database and save them in `./site/tables/` as CSV files with the following naming convention `TABLE_NAME.csv`.
 
 ```
 DBA_ROLES
@@ -48,3 +48,4 @@ python -m http.server 9090 --directory ./site
 ## TODO
 
 1. Improve UI
+2. Highlight dangerous permissions with tags
