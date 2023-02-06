@@ -14,7 +14,7 @@ fi
 
 ODIR=./site/tables
 if [ ! -d "$ODIR" ]; then 
-    mkdir "$ODIR"
+    mkdir -p "$ODIR"
 fi
 
 while read table
