@@ -48,4 +48,3 @@ python -m http.server 9090 --directory ./site
 ## TODO
 
 1. Improve UI
-2. Highlight dangerous permissions with tags
