@@ -7,7 +7,7 @@ fi
 
 source .env
 
-if [ ! command -v usql &> /dev/null ]; then
+if [ ! $(command -v usql)]; then
     echo "usql bin not found"
     exit 2
 fi
